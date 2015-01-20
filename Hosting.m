@@ -176,7 +176,7 @@
             [event setObject:geoPoint forKey:@"eventLocation"];
             [event setObject:[PFUser currentUser] forKey:@"Host"];
             
-            // Recipe image
+            // image
             NSData *imageData = UIImageJPEGRepresentation(_addPhoto.image, 0.8);
             NSString *filename = [NSString stringWithFormat:@"%@.png", _name.text];
             PFFile *imageFile = [PFFile fileWithName:filename data:imageData];
@@ -194,7 +194,7 @@
     [hud show:YES];
     
     
-    // Upload recipe to Parse
+    // Upload to Parse
     [event saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         [hud hide:YES];
         
@@ -203,7 +203,7 @@
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upload Complete" message:@"Successfully saved the event" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
             [alert show];
             
-            // Notify table view to reload the recipes from Parse cloud
+            // Notify table view to reload
             [[NSNotificationCenter defaultCenter] postNotificationName:@"refreshTable" object:self];
             
             // Dismiss the controller
