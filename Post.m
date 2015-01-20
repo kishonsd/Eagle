@@ -65,7 +65,7 @@
     Post *post = (Post *)other;
     
     if (post.object && self.object) {
-        // We have a PFObject inside the PAWPost, use that instead.
+   
         return [post.object.objectId isEqualToString:self.object.objectId];
     }
     
