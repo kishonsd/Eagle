@@ -22,8 +22,8 @@
   
     
     // Initialize Parse.
-    [Parse setApplicationId:@"eC41jUGM1nojmvPabkKRpV4CcE8AHdm1QLzMxUGl"
-                  clientKey:@"H3v8uoc6t7tG7LQYudAlwpyaHgT65NDeZxtx2JnY"];
+    [Parse setApplicationId:@"_APPLICATION ID_"
+                  clientKey:@"_CLIENT KEY_"];
     NSLog(@"test");
     
     [PFUser enableAutomaticUser];
