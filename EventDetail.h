@@ -16,7 +16,7 @@
     NSArray *users;
     
 }
-
+@property (nonatomic, strong) IBOutlet UITableView *userTable;
 @property (nonatomic, weak) IBOutlet UILabel *eventName;
 @property (nonatomic, weak) IBOutlet UILabel *address;
 @property (nonatomic, weak) IBOutlet UILabel *date;
@@ -25,10 +25,12 @@
 @property (nonatomic ,strong) PFObject *event;
 @property (nonatomic, strong) PFObject *attendingUser;
 @property (nonatomic, strong) IBOutlet PFImageView *eventImage;
-@property (nonatomic,strong) IBOutlet MKMapView *map;
-@property (nonatomic, strong)IBOutlet UIToolbar *toolBar;
+@property (nonatomic, strong) PFImageView *userPhoto;
+@property (nonatomic ,strong) UILabel *username;
+@property (nonatomic, strong) IBOutlet UIButton *attending;
+
 @property (nonatomic, strong) UITextField *textField;
-@property (nonatomic, strong) IBOutlet UIBarButtonItem *attending;
+
 - (IBAction)attending:(id)sender;
 
 

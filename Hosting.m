@@ -6,8 +6,6 @@
 //  Copyright (c) 2015 HackStack. All rights reserved.
 //
 
-#define IS_OS_8_OR_LATER ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
-
 #import "Hosting.h"
 #import "MBProgressHud.h"
 #import "ConfigManager.h"
@@ -18,14 +16,6 @@
 @implementation Hosting
 @synthesize locationManager;
 
-
-- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        _maximumCharacterCount = [[ConfigManager sharedManager] postMaxCharacterCount];
-    }
-    return self;
-}
 
 -(void)viewDidLoad {
     [super viewDidLoad];
@@ -49,15 +39,6 @@
     
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
-#ifdef __IPHONE_8_0
-    if(IS_OS_8_OR_LATER) {
-        // Use one or the other, not both. Depending on what you put in info.plist
-        
-        [self.locationManager requestWhenInUseAuthorization];
-    }
-#endif
-    [self.locationManager startUpdatingLocation];
-
 
 }
 
@@ -166,8 +147,23 @@
 -(IBAction)submit:(id)sender {
     
     [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
+        if (error) {
+            
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Whoops!" message:@"You must turn on your location services to post an event" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [alert show];
+            }
         if (!error) {
-            NSLog(@"User is currently at %f, %f", geoPoint.latitude, geoPoint.longitude);
+             NSLog(@"User is currently at %f, %f", geoPoint.latitude, geoPoint.longitude);
+            [self saveEvent];
+        }
+    }];
+}
+
+- (void)saveEvent {
+    
+    [PFGeoPoint geoPointForCurrentLocationInBackground:^(PFGeoPoint *geoPoint, NSError *error) {
+        if (!error) {
+            
             // Data prep:
             // Stitch together a postObject and send this async to Parse
             NSString *title = _name.text;
@@ -179,21 +175,18 @@
             [event setObject:time forKey:@"date"];
             [event setObject:geoPoint forKey:@"eventLocation"];
             [event setObject:[PFUser currentUser] forKey:@"Host"];
-            [[PFUser currentUser] saveInBackground];
             
             // Recipe image
             NSData *imageData = UIImageJPEGRepresentation(_addPhoto.image, 0.8);
             NSString *filename = [NSString stringWithFormat:@"%@.png", _name.text];
             PFFile *imageFile = [PFFile fileWithName:filename data:imageData];
             [event setObject:imageFile forKey:@"eventImage"];
-            [event saveInBackground];
-    // Use PFACL to restrict future modifications to this object.
             
-    [PFACL setDefaultACL:[PFACL ACL] withAccessForCurrentUser:YES];
-    PFACL *readOnlyACL = [PFACL ACL];
-    [readOnlyACL setPublicReadAccess:YES];
-    [readOnlyACL setPublicWriteAccess:NO];
-    _event.ACL = readOnlyACL;
+            PFACL *defaultACL = [PFACL ACL];
+            [defaultACL setPublicReadAccess:YES];
+            [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
+                          
+            
     // Show progress
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     hud.mode = MBProgressHUDModeIndeterminate;
@@ -216,17 +209,12 @@
             // Dismiss the controller
             [self dismissViewControllerAnimated:YES completion:nil];
             
-        } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upload Failure" message:[error localizedDescription] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-            [alert show];
-            
         }
-        
     }];
-    
         }
     }];
 }
+
 
 - (IBAction)cancel:(id)sender {
     

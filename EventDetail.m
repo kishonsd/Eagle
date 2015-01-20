@@ -7,20 +7,18 @@
 //
 
 #import "EventDetail.h"
-
+#import <QuartzCore/QuartzCore.h>
+#import "TabController.h"
+#import "Cache.h"
 
 @implementation EventDetail
-
-
 
 - (id)initWithCoder:(NSCoder *)aCoder
 {
     self = [super initWithCoder:aCoder];
     if (self)
     {
-        self.parseClassName = @"User";
-        self.textKey = @"";
-        self.imageKey = @"eventImage";
+        self.parseClassName = @"Activity";
         self.pullToRefreshEnabled = YES;
         self.paginationEnabled = NO;
         self.objectsPerPage = 25;
@@ -42,6 +40,11 @@
     
     [super viewDidLoad];
     
+    [_attending setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    [_attending setTitleColor:[UIColor blueColor] forState:UIControlStateDisabled];
+    
+    [_attending addTarget:self action:@selector(attending:) forControlEvents:UIControlEventTouchUpInside];
+    
     //Load all labels and event image to view
     self.eventName.text = [self.event objectForKey:@"title"];
     self.address.text = [self.event objectForKey:@"address"];
@@ -50,52 +53,31 @@
     
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
     
-    self->users = [NSArray array];
-    [self performSelector: @selector(retrieveFromParse)];
-    
     self.eventImage.layer.cornerRadius = self.eventImage.frame.size.width / 2;
     self.eventImage.clipsToBounds = YES;
     
-    self.navigationController.toolbarHidden = NO;
+    self.navigationController.toolbarHidden = YES;
     
 }
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-
-{
-    // Return the number of sections.
-    if (_event) {
-        
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-        return 1;
-        
-    } else {
-        
-        // Display a message when the table is empty
-        UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
-        
-        messageLabel.text = @"No one is attending this event";
-        messageLabel.textColor = [UIColor blackColor];
-        messageLabel.numberOfLines = 0;
-        messageLabel.textAlignment = NSTextAlignmentCenter;
-        messageLabel.font = [UIFont fontWithName:@"Palatino-Italic" size:20];
-        [messageLabel sizeToFit];
-        
-        self.tableView.backgroundView = messageLabel;
-        
-    }
-    
-    return 0;
-}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [users count];
 }
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 
-- (void)retrieveFromParse {
-    
+{
+    return 1;
 }
 
+- (PFQuery *)queryForTable {
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    
+    [query includeKey:@"going.user"];
+    
+    [query includeKey:@"username"];
+    
+    return query;
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
                         object:(PFObject *)object {
@@ -109,16 +91,33 @@
                                       reuseIdentifier:CellIdentifier];
     }
     
+    // Configure the cell
+    PFFile *thumbnail = [object objectForKey:@"profilePic"];
+    PFImageView *thumbnailImageView = (PFImageView*)[cell viewWithTag:100];
+    thumbnailImageView.image = [UIImage imageNamed:@"placeholder.jpg"];
+    thumbnailImageView.file = thumbnail;
+    [thumbnailImageView loadInBackground];
+    
+    cell.textLabel.text = [object objectForKey:@"username"];
+    
     return cell;
 }
 
 - (IBAction)attending:(id)sender {
     
-    PFObject *event = [PFObject objectWithClassName:@"Posts"];
-    PFUser *user =[PFUser currentUser];
-    [event addObject:[PFUser currentUser] forKey:@"attending"];
-    [user saveInBackground];
-
+    NSLog(@"Touch");
+     UIButton *button = (UIButton *)sender;
+    button.selected = !button.selected ;
+    
+    // increment the episode's counter
+    [_event incrementKey:@"attending"];
+  
+    PFObject *activity = [PFObject objectWithClassName:@"Activity"];
+    [activity setObject:[PFUser currentUser] forKey:@"going"];
+    [activity setObject:_event forKey:@"event"];
+    [activity saveInBackground];
+    
 }
+
 
 @end

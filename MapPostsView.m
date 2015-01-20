@@ -441,7 +441,7 @@ HostingDataSource>
                 MKPointAnnotation *geoPointAnnotation = [[MKPointAnnotation alloc]
                                                          init];
                 
-                geoPointAnnotation.coordinate = CLLocationCoordinate2DMake(point.latitude, offerPoint.longitude);
+                geoPointAnnotation.coordinate = CLLocationCoordinate2DMake(point.latitude, point.longitude);
                 
                 [self.mapView addAnnotation:geoPointAnnotation];
                 
@@ -508,6 +508,11 @@ HostingDataSource>
             //[self.mapView1 addAnnotation:geoPointAnnotation];
         }
         }
+        }
+        if (error) {
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Whoops!" message:@"You must turn on your location services to see the event map" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [alert show];
         }
     }];
 
