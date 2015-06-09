@@ -27,14 +27,21 @@
     _time.delegate = self;
     
     self.addPhoto.layer.cornerRadius = self.addPhoto.frame.size.width / 2;
+
     self.addPhoto.clipsToBounds = YES;
+
     self.addEventImage.layer.cornerRadius = self.addEventImage.frame.size.width / 2;
+
     self.addEventImage.clipsToBounds = YES;
     
     UIView *accessoryView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 10.0f, 144.0f, 26.0f)];
+
     self.characterCountLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 0.0f, 144.0f, 21.0f)];
+
     self.characterCountLabel.backgroundColor = [UIColor clearColor];
+
     self.characterCountLabel.textColor = [UIColor darkGrayColor];
+
     [accessoryView addSubview:self.characterCountLabel];
     
     self.locationManager = [[CLLocationManager alloc] init];
@@ -55,6 +62,7 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:YES];
+
     NSLog(@"View appeared");
 }
 
@@ -62,11 +70,13 @@
     [super viewWillDisappear:YES];
     
     [self.view endEditing:YES];
+
     NSLog(@"View disappeared");
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
     // Return the number of sections.
+
     return 1;
 }
 
@@ -83,9 +93,11 @@
     }
     
     UIImagePickerController *mediaUI = [[UIImagePickerController alloc] init];
+
     mediaUI.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     
     // Displays saved pictures from the Camera Roll album.
+
     mediaUI.mediaTypes = @[(NSString*)kUTTypeImage];
     
     // Hides the controls for moving & scaling pictures
@@ -105,6 +117,7 @@
 - (void) imagePickerController: (UIImagePickerController *) picker didFinishPickingMediaWithInfo: (NSDictionary *) info {
     
     UIImage *originalImage = (UIImage *) [info objectForKey:UIImagePickerControllerOriginalImage];
+
     self.addPhoto.image = originalImage;
     
     [picker dismissViewControllerAnimated:YES completion:nil];
@@ -131,6 +144,7 @@
     }
     
     UIImagePickerController *mediaUI = [[UIImagePickerController alloc] init];
+
     mediaUI.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     
     // Displays saved pictures from the Camera Roll album.
@@ -166,10 +180,12 @@
             
             // Data prep:
             // Stitch together a postObject and send this async to Parse
+
             NSString *title = _name.text;
             NSString *location = _location.text;
             NSString *time = _time.text;
             PFObject *event = [PFObject objectWithClassName:@"Posts"];
+
             [event setObject:title forKey:@"title"];
             [event setObject:location forKey:@"address"];
             [event setObject:time forKey:@"date"];
@@ -179,7 +195,9 @@
             // image
             NSData *imageData = UIImageJPEGRepresentation(_addPhoto.image, 0.8);
             NSString *filename = [NSString stringWithFormat:@"%@.png", _name.text];
+
             PFFile *imageFile = [PFFile fileWithName:filename data:imageData];
+
             [event setObject:imageFile forKey:@"eventImage"];
             
             PFACL *defaultACL = [PFACL ACL];
@@ -189,18 +207,22 @@
             
     // Show progress
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
     hud.mode = MBProgressHUDModeIndeterminate;
     hud.labelText = @"Uploading";
+
     [hud show:YES];
     
     
     // Upload to Parse
     [event saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+
         [hud hide:YES];
         
         if (!error) {
             // Show success message
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upload Complete" message:@"Successfully saved the event" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+
             [alert show];
             
             // Notify table view to reload
