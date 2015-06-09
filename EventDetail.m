@@ -22,7 +22,9 @@
         self.pullToRefreshEnabled = YES;
         self.paginationEnabled = NO;
         self.objectsPerPage = 25;
+
     }
+
     return self;
 }
 
@@ -41,14 +43,18 @@
     [super viewDidLoad];
     
     [_attending setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+
     [_attending setTitleColor:[UIColor blueColor] forState:UIControlStateDisabled];
     
     [_attending addTarget:self action:@selector(attending:) forControlEvents:UIControlEventTouchUpInside];
     
     //Load all labels and event image to view
     self.eventName.text = [self.event objectForKey:@"title"];
+
     self.address.text = [self.event objectForKey:@"address"];
+
     self.date.text = [self.event objectForKey:@"date"];
+
     self.eventImage.image = [[UIImage alloc] initWithData: [[self.event objectForKey:@"eventImage"] getData]];
     
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
@@ -93,8 +99,11 @@
     
     // Configure the cell
     PFFile *thumbnail = [object objectForKey:@"profilePic"];
+
     PFImageView *thumbnailImageView = (PFImageView*)[cell viewWithTag:100];
+
     thumbnailImageView.image = [UIImage imageNamed:@"placeholder.jpg"];
+
     thumbnailImageView.file = thumbnail;
     [thumbnailImageView loadInBackground];
     
@@ -106,6 +115,7 @@
 - (IBAction)attending:(id)sender {
     
     NSLog(@"Touch");
+
      UIButton *button = (UIButton *)sender;
     button.selected = !button.selected ;
     
@@ -113,7 +123,9 @@
     [_event incrementKey:@"attending"];
   
     PFObject *activity = [PFObject objectWithClassName:@"Activity"];
+
     [activity setObject:[PFUser currentUser] forKey:@"going"];
+
     [activity setObject:_event forKey:@"event"];
     [activity saveInBackground];
     
