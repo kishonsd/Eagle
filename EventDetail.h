@@ -10,29 +10,35 @@
 #import <Parse/Parse.h>
 #import <MapKit/MapKit.h>
 #import <ParseUI/ParseUI.h>
+#import <MobileCoreServices/MobileCoreServices.h>
+#import "Comment.h"
 
-@interface EventDetail : PFQueryTableViewController <UITableViewDelegate, UITableViewDataSource> {
-    NSArray *posts;
-    NSArray *users;
+@interface EventDetail : UIViewController <UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UICollectionViewDataSource, UICollectionViewDelegate>  {
+    
+    NSArray *images;
+   
+    BOOL buttonCurrentStatus;
     
 }
-@property (nonatomic, strong) IBOutlet UITableView *userTable;
-@property (nonatomic, weak) IBOutlet UILabel *eventName;
-@property (nonatomic, weak) IBOutlet UILabel *address;
-@property (nonatomic, weak) IBOutlet UILabel *date;
-@property (nonatomic, strong) PFObject *object;
-@property (nonatomic, strong) PFObject *post;
-@property (nonatomic ,strong) PFObject *event;
-@property (nonatomic, strong) PFObject *attendingUser;
-@property (nonatomic, strong) IBOutlet PFImageView *eventImage;
-@property (nonatomic, strong) PFImageView *userPhoto;
-@property (nonatomic ,strong) UILabel *username;
-@property (nonatomic, strong) IBOutlet UIButton *attending;
 
-@property (nonatomic, strong) UITextField *textField;
+@property (nonatomic, strong) IBOutlet UINavigationBar *navBar;
+@property (nonatomic, weak) IBOutlet UILabel *eventName;
+@property (nonatomic, weak) IBOutlet UILabel *location;
+@property (nonatomic, weak) IBOutlet UILabel *date;
+@property (nonatomic, weak) IBOutlet UILabel *detail;
+@property (nonatomic, strong) PFObject *object;
+@property (nonatomic, strong) IBOutlet UIButton *attending;
+@property (nonatomic, weak) PFObject *event;
+@property (nonatomic, strong) PFObject *comment;
+@property (nonatomic, strong) PFObject *attendingUser;
+@property (nonatomic, strong) IBOutlet PFImageView *photo;
+@property (nonatomic, strong) IBOutlet UITableView *commentTable;
+@property (nonatomic, strong) IBOutlet UICollectionView *image;
+@property (nonatomic, strong) IBOutlet UIImage *userPhoto;
+
+
 
 - (IBAction)attending:(id)sender;
-
-
+- (IBAction)dismiss:(id)sender;
 
 @end

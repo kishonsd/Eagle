@@ -82,7 +82,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     // Return the number of rows in the section.
-    return 3;
+    return 2;
 }
 
 - (void)showPhotoLibary
@@ -125,7 +125,6 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [_name resignFirstResponder];
-    [_location resignFirstResponder];
     [_time resignFirstResponder];
     
     return YES;
@@ -182,12 +181,10 @@
             // Stitch together a postObject and send this async to Parse
 
             NSString *title = _name.text;
-            NSString *location = _location.text;
             NSString *time = _time.text;
             PFObject *event = [PFObject objectWithClassName:@"Posts"];
 
             [event setObject:title forKey:@"title"];
-            [event setObject:location forKey:@"address"];
             [event setObject:time forKey:@"date"];
             [event setObject:geoPoint forKey:@"eventLocation"];
             [event setObject:[PFUser currentUser] forKey:@"Host"];
@@ -199,18 +196,21 @@
             PFFile *imageFile = [PFFile fileWithName:filename data:imageData];
 
             [event setObject:imageFile forKey:@"eventImage"];
-            
-            PFACL *defaultACL = [PFACL ACL];
-            [defaultACL setPublicReadAccess:YES];
-            [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
                           
             
     // Show progress
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
     hud.mode = MBProgressHUDModeIndeterminate;
+<<<<<<< HEAD
+    hud.labelText = @"Saving";
+=======
     hud.labelText = @"Uploading";
 
+<<<<<<< Updated upstream
+=======
+>>>>>>> origin/master
+>>>>>>> Stashed changes
     [hud show:YES];
     
     
@@ -221,8 +221,15 @@
         
         if (!error) {
             // Show success message
+<<<<<<< HEAD
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Thanks!" message:@"We will contact you through email to confirm this event" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+=======
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Upload Complete" message:@"Successfully saved the event" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
 
+<<<<<<< Updated upstream
+=======
+>>>>>>> origin/master
+>>>>>>> Stashed changes
             [alert show];
             
             // Notify table view to reload
