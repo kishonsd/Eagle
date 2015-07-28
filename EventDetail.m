@@ -8,8 +8,8 @@
 
 #import "EventDetail.h"
 #import <QuartzCore/QuartzCore.h>
-#import "Constants.h"
-#import "Comment.h"
+#import "TabController.h"
+#import "Cache.h"
 
 @implementation EventDetail
 
@@ -28,141 +28,77 @@
     return self;
 }
 
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
 }
 
 
-- (void)viewDidAppear:(BOOL)animated {
+-(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:YES];
-    
-    [_commentTable reloadData];
    
 }
-
 - (void)viewDidLoad {
     
     [super viewDidLoad];
     
-
-    [[UIBarButtonItem appearance] setTintColor:[UIColor whiteColor]];
-
     [_attending setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
 
     [_attending setTitleColor:[UIColor blueColor] forState:UIControlStateDisabled];
-
     
-    _attending.layer.cornerRadius = 4; // this value varies
-    _attending.clipsToBounds = YES;
-                                            
-    [_attending setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [_attending setTitleColor:[UIColor whiteColor] forState:UIControlStateDisabled];
     [_attending addTarget:self action:@selector(attending:) forControlEvents:UIControlEventTouchUpInside];
     
     //Load all labels and event image to view
     self.eventName.text = [self.event objectForKey:@"title"];
-    self.location.text = [self.event objectForKey:@"address"];
+
+    self.address.text = [self.event objectForKey:@"address"];
+
     self.date.text = [self.event objectForKey:@"date"];
-    self.detail.text = [self.event objectForKey:@"detail"];
-    self.photo.image = [[UIImage alloc] initWithData: [[self.event objectForKey:@"eventImage"] getData]];
+
+    self.eventImage.image = [[UIImage alloc] initWithData: [[self.event objectForKey:@"eventImage"] getData]];
     
     [self.navigationController.navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
     
-    PFQuery *query = [PFQuery queryWithClassName:@"Photos"];
+    self.eventImage.layer.cornerRadius = self.eventImage.frame.size.width / 2;
+    self.eventImage.clipsToBounds = YES;
     
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            // The find succeeded.
-            NSLog(@"Successfully retrieved %lu events.", (unsigned long)objects.count);
-            self->images = objects;
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.image reloadData];
-            });
-            
-        } else {
-            // Log details of the failure
-            NSLog(@"Error: %@", error);
-        }
-    }];
-
-
-    
+    self.navigationController.toolbarHidden = YES;
     
 }
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return [users count];
+}
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 
-- (void)viewDidUnload {
-    
-    [super viewDidUnload];
+{
+    return 1;
 }
 
-- (NSInteger) collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+- (PFQuery *)queryForTable {
     
-    return[images count];
+    PFQuery *query = [PFQuery queryWithClassName:@"Activity"];
+    
+    [query includeKey:@"going.user"];
+    
+    [query includeKey:@"username"];
+    
+    return query;
 }
 
-
-- (UICollectionViewCell *) collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+                        object:(PFObject *)object {
     
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+    static NSString *CellIdentifier = @"Cell";
     
-    
-    cell.backgroundColor = [UIColor whiteColor];
-    
-    
-    PFObject *imageObject = [images objectAtIndex:indexPath.row];
-    PFFile *imageFile = [imageObject objectForKey:@"image"];
-    [imageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        if (!error){
-            NSLog(@"is there any data? %@", data);
-            
-        }
-        else {
-            NSLog(@"no data!");
-        }
-    }];
-    
-    return cell;
-}
-
-- (IBAction)addPhoto:(id)sender {
-    
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Share photo from where?"
-                                                             delegate:self
-                                                    cancelButtonTitle:@"Cancel"
-                                               destructiveButtonTitle:nil
-                                                    otherButtonTitles:@"Photo Album", @"Camera", nil];
-    
-    [actionSheet showInView:self.view];
-
-}
-
-
-- (void)showPhotoLibary
-    {
-        if (([UIImagePickerController isSourceTypeAvailable:
-              UIImagePickerControllerSourceTypeSavedPhotosAlbum] == NO)) {
-            return;
-        }
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
         
-        UIImagePickerController *mediaUI = [[UIImagePickerController alloc] init];
-        mediaUI.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-        
-        // Displays saved pictures from the Camera Roll album.
-        mediaUI.mediaTypes = @[(NSString*)kUTTypeImage];
-        
-        // Hides the controls for moving & scaling pictures
-        mediaUI.allowsEditing = NO;
-        
-        mediaUI.delegate = self;
-        
-        [self presentViewController:mediaUI animated:YES completion:nil];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle
+                                      reuseIdentifier:CellIdentifier];
     }
-
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
     // Configure the cell
-    PFFile *thumbnail = [_object objectForKey:@"profilePic"];
+    PFFile *thumbnail = [object objectForKey:@"profilePic"];
 
     PFImageView *thumbnailImageView = (PFImageView*)[cell viewWithTag:100];
 
@@ -170,141 +106,30 @@
 
     thumbnailImageView.file = thumbnail;
     [thumbnailImageView loadInBackground];
-
-    if (buttonIndex == 0) {
     
-    if (([UIImagePickerController isSourceTypeAvailable:
-          UIImagePickerControllerSourceTypeSavedPhotosAlbum] == NO)) {
-        return;
-    }
+    cell.textLabel.text = [object objectForKey:@"username"];
     
-    UIImagePickerController *mediaUI = [[UIImagePickerController alloc] init];
-    mediaUI.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    
-    // Displays saved pictures from the Camera Roll album.
-    mediaUI.mediaTypes = @[(NSString*)kUTTypeImage];
-    
-    // Hides the controls for moving & scaling pictures
-    mediaUI.allowsEditing = NO;
-    
-    mediaUI.delegate = self;
-    
-    [self presentViewController:mediaUI animated:YES completion:nil];
-  }
-    
-    if (buttonIndex == 1) {
-        
-        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-        picker.delegate = self;
-        picker.allowsEditing = YES;
-        picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-        
-        [self presentViewController:picker animated:YES completion:NULL];
-        
-    }
-    
-        if (![UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-            
-            UIAlertView *myAlertView = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                  message:@"Device has no camera"
-                                                                 delegate:nil
-                                                        cancelButtonTitle:@"OK"
-                                                        otherButtonTitles: nil];
-            
-            [myAlertView show];
-            
-        }
-        
-        
-    }
-    
-- (void)imagePickerController: (UIImagePickerController *) picker didFinishPickingMediaWithInfo: (NSDictionary *) info {
-    
-    NSData *imageData = UIImagePNGRepresentation(_userPhoto);
-    PFFile *imageFile = [PFFile fileWithName:@"image.png" data:imageData];
-    [imageFile save];
-    
-    UIImage *chosenImage = info[UIImagePickerControllerEditedImage];
-    
-    [picker dismissViewControllerAnimated:YES completion:NULL];
-    
-    PFObject *userPhoto = [PFObject objectWithClassName:@"Photos"];
-    [userPhoto setObject:chosenImage forKey:@"image"];
-    [userPhoto save];
-    
+    return cell;
 }
 
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    
-    [picker dismissViewControllerAnimated:YES completion:NULL];
-    
-}
 - (IBAction)attending:(id)sender {
-    /* if we have multiple buttons, then we can
-     differentiate them by tag value of button.*/
-    // But note that you have to set the tag value before use this method.
     
-    if([sender tag] == 0 )
-    
-    {
-        
-        if (buttonCurrentStatus == NO)
-        {
-            buttonCurrentStatus = YES;
-            [self incrementBookmark];
-        }
-        else
-        {
-            buttonCurrentStatus = NO;
-            [self decrementBookmark];
-        }   
-    }
-    
-    PFObject *event = [PFObject objectWithClassName:@"Posts"];
-    // Set a new value on quantity
-    [event setObject:@1 forKey:@"liked"];
-    
-<<<<<<< HEAD
-=======
     NSLog(@"Touch");
 
      UIButton *button = (UIButton *)sender;
     button.selected = !button.selected ;
->>>>>>> origin/master
     
+    // increment the episode's counter
+    [_event incrementKey:@"attending"];
+  
     PFObject *activity = [PFObject objectWithClassName:@"Activity"];
 
     [activity setObject:[PFUser currentUser] forKey:@"going"];
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-    [activity setObject:self.event forKey:@"event"];
-    //Save
-=======
->>>>>>> Stashed changes
 
     [activity setObject:_event forKey:@"event"];
->>>>>>> origin/master
     [activity saveInBackground];
     
-    
 }
 
-
-
-- (void)incrementBookmark {
-  
-    
-
-}
-
-- (void)decrementBookmark {
-    
-}
-
-- (void)dismiss:(id)sender {
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
 
 @end

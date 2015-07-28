@@ -24,8 +24,6 @@ static NSString * const PostLocationKey = @"eventLocation";
 static NSString * const PostTextKey = @"text";
 static NSString * const PostNameKey = @"title";
 static NSString * const PostDateKey = @"date";
-static NSString * const PostName = @"post";
-static NSString * const Attending = @"going";
 // NSNotification userInfo keys:
 static NSString * const kFilterDistanceKey = @"filterDistance";
 static NSString * const kLocationKey = @"currentLocation";
@@ -42,7 +40,6 @@ static NSString * const kCantViewPost = @"Can’t view post! Get closer.";
 static NSString * const UserDefaultsFilterDistanceKey = @"filterDistance";
 
 typedef double LocationAccuracy;
-
 
 #endif
 

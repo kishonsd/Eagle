@@ -9,11 +9,13 @@
 #import "MapPostsView.h"
 #import "Constants.h"
 #import "Post.h"
+#import "Hosting.h"
 #import "EventTableView.h"
 #import "EventDetail.h"
 
 @interface MapPostsView ()
-<EventTableViewDataSource>
+<EventTableViewDataSource,
+HostingDataSource>
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) CLLocation *currentLocation;
@@ -31,9 +33,6 @@
 
 @implementation MapPostsView
 @synthesize coordinate;
-@synthesize name;
-@synthesize address;
-@synthesize time; 
 
 #pragma mark -
 #pragma mark Init
@@ -41,6 +40,7 @@
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        self.title = @"Peak";
         
         _annotations = [[NSMutableArray alloc] initWithCapacity:10];
         _allPosts = [[NSMutableArray alloc] initWithCapacity:10];
@@ -49,13 +49,11 @@
                                                  selector:@selector(distanceFilterDidChange:)
                                                      name:FilterDistanceDidChangeNotification
                                                    object:nil];
-        
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(postWasCreated:)
                                                      name:PostCreatedNotification
                                                    object:nil];
     }
-    
     return self;
 }
 
@@ -75,19 +73,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    
-    
-    UILabel *title = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, self.navigationItem.titleView.frame.size.width,40)];
-    
-    title.text=@"Nearby";
-    
-    title.textAlignment = NSTextAlignmentCenter;
-    title.textColor = [UIColor whiteColor];
-    
-    UIFont *font = [UIFont fontWithName:@"Avenir-Heavy" size:20];
-    [title setFont:font];
-    self.navigationItem.titleView = title;
-    
     
     [self eventTableViewController];
     
@@ -186,8 +171,17 @@
 #pragma mark -
 #pragma mark WallPostCreatViewController
 
+- (void)presentHosting {
+    Hosting *viewController = [[Hosting alloc] initWithNibName:nil bundle:nil];
+    viewController.dataSource = self;
+    [self.navigationController presentViewController:viewController animated:YES completion:nil];
+}
 
 #pragma mark DataSource
+
+- (CLLocation *)currentLocationForHosting:(Hosting *)controller {
+    return self.currentLocation;
+}
 
 #pragma mark -
 #pragma mark NSNotificationCenter notification handlers
@@ -199,7 +193,6 @@
         [self.mapView removeOverlay:self.circleOverlay];
         self.circleOverlay = nil;
     }
-    
     self.circleOverlay = [MKCircle circleWithCenterCoordinate:self.currentLocation.coordinate radius:filterDistance];
     [self.mapView addOverlay:self.circleOverlay];
     
@@ -242,7 +235,7 @@
     // If they panned the map since our last location update, don't recenter it.
     if (!self.mapPannedSinceLocationUpdate) {
         // Set the map's region centered on their new location at 2x filterDistance
-        MKCoordinateRegion newRegion = MKCoordinateRegionMakeWithDistance(self.currentLocation.coordinate, filterDistance * 100.0f, filterDistance * 100.0f);
+        MKCoordinateRegion newRegion = MKCoordinateRegionMakeWithDistance(self.currentLocation.coordinate, filterDistance * 2.0f, filterDistance * 2.0f);
         
         BOOL oldMapPannedValue = self.mapPannedSinceLocationUpdate;
         [self.mapView setRegion:newRegion animated:YES];
@@ -270,6 +263,16 @@
 #pragma mark -
 #pragma mark UINavigationBar-based actions
 
+- (IBAction)settingsButtonSelected:(id)sender {
+    [self.delegate mapPostsViewWantsToPresentSettings:self];
+}
+
+- (IBAction)postButtonSelected:(id)sender {
+    [self presentHosting];
+    [self performSegueWithIdentifier:@"NewPost" sender:self];
+    NSLog(@"Going to create new post");
+}
+
 #pragma mark -
 #pragma mark CLLocationManagerDelegate methods and helpers
 
@@ -281,7 +284,7 @@
         _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         
         // Set a movement threshold for new events.
-        _locationManager.distanceFilter = kCLLocationAccuracyHundredMeters;
+        _locationManager.distanceFilter = kCLLocationAccuracyNearestTenMeters;
     }
     return _locationManager;
 }
@@ -309,7 +312,7 @@
         case kCLAuthorizationStatusDenied:
             NSLog(@"kCLAuthorizationStatusDenied");
         {
-            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Peak can’t access your current location.\n\nTo view nearby events or set an event at your current location, turn on access for Peak to your location in the Settings app under Location Services." message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"Settings", nil];
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Peak can’t access your current location.\n\nTo view nearby events or set an event at your current location, turn on access for Peak to your location in the Settings app under Location Services." message:nil delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
             [alertView show];
             // Disable the post button.
             self.navigationItem.rightBarButtonItem.enabled = NO;
@@ -328,15 +331,6 @@
       default:
       break;
  }
-}
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 1) {
-        // Send the user to the Settings for this app
-        NSURL *settingsURL = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-        [[UIApplication sharedApplication] openURL:settingsURL];
-    }
 }
 
 - (void)locationManager:(CLLocationManager *)manager
@@ -372,60 +366,42 @@
 
 - (MKOverlayRenderer *)mapView:(MKMapView *)mapView rendererForOverlay:(id < MKOverlay >)overlay {
     if ([overlay isKindOfClass:[MKCircle class]]) {
-        
         MKCircleRenderer *circleRenderer = [[MKCircleRenderer alloc] initWithCircle:self.circleOverlay];
-        [circleRenderer setFillColor:[[UIColor blueColor] colorWithAlphaComponent:0.2f]];
-        [circleRenderer setStrokeColor:[[UIColor blueColor] colorWithAlphaComponent:0.7f]];
+        [circleRenderer setFillColor:[[UIColor darkGrayColor] colorWithAlphaComponent:0.2f]];
+        [circleRenderer setStrokeColor:[[UIColor darkGrayColor] colorWithAlphaComponent:0.7f]];
         [circleRenderer setLineWidth:1.0f];
         return circleRenderer;
-        
-    }
-    return nil;
-
-}
-
-- (MKOverlayView *)mapView:(MKMapView*)mapView viewForOverlay:(id)overlay {
-    
-    if ([overlay isKindOfClass:[MKPolyline class]]) {
-        MKPolylineView* aView = [[MKPolylineView alloc]initWithPolyline:(MKPolyline*)overlay] ;
-        aView.strokeColor = [[UIColor blueColor] colorWithAlphaComponent:0.5];
-        aView.lineWidth = 10;
-        return aView;
     }
     return nil;
 }
 
-- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation{
+-(MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation{
     
-    static NSString *AnnotationViewID = @"places_coordinate";
+    static NSString *MapViewAnnotationIdentifier = @"places_coordinate";
     
-    MKAnnotationView *annotationView = (MKAnnotationView *)[_mapView dequeueReusableAnnotationViewWithIdentifier:AnnotationViewID];
+    MKPinAnnotationView *pin = [[MKPinAnnotationView alloc] initWithAnnotation:self.annotation reuseIdentifier:MapViewAnnotationIdentifier];
     
-    if (annotationView == nil)
-    {
-        annotationView = [[MKAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:AnnotationViewID];
-    }
+    pin.canShowCallout = YES;
     
-    annotationView.image = [UIImage imageNamed:@"mapmarker.png"];//add any image which you want to show on map instead of red pins
+    pin.animatesDrop = YES;
     
-    annotationView.annotation = annotation;
-    
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
-    annotationView.rightCalloutAccessoryView = button;
-    annotationView.draggable = NO;
-    annotationView.highlighted = YES;
-    annotationView.canShowCallout = YES;
-    return annotationView;
+    return pin;
     
 }
 
-- (void)mapView:(MKMapView *)mapView annotationView:(MapPostsView *)view calloutAccessoryControlTapped:(UIControl *)control {
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control{
     
-    NSLog(@"calloutAccessoryControlTapped: annotation = %@", view.annotation);
-    EventDetail *detailView = [[EventDetail alloc] initWithNibName:@"EventDetail" bundle:nil];
-    //here, can set annotation info in some property of detailView
-    [[self navigationController] pushViewController:detailView animated:YES];
+ [self performSegueWithIdentifier:@"showDetail" sender:view];
       
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"showDetail"])
+    {
+        MKAnnotationView *annotationView = sender;
+        [segue.destinationViewController setAnnotation:annotationView.annotation];
+    }
 }
 
 #pragma mark -
@@ -433,7 +409,7 @@
 
 - (void)queryForAllPostsNearLocation:(CLLocation *)currentLocation withNearbyDistance:(CLLocationAccuracy)nearbyDistance {
     
-    PFQuery *query = [PFQuery queryWithClassName:@"Posts"];
+    PFQuery *query = [PFQuery queryWithClassName:PostsClassName];
 
     
     if (currentLocation == nil) {
@@ -460,7 +436,7 @@
             for (PFObject *object in posts) {
                 
                 
-                PFGeoPoint *point = [object objectForKey:@"geopoint"];
+                PFGeoPoint *point = [object objectForKey:@"eventLocation"];
                 
                 MKPointAnnotation *geoPointAnnotation = [[MKPointAnnotation alloc]
                                                          init];
@@ -488,7 +464,7 @@
     
     //Create a point for markers
     
-    PFGeoPoint *point = location[@"geopoint"];
+    PFGeoPoint *point = location[@"eventLocation"];
     
     // Check current Location
     
@@ -498,13 +474,13 @@
     
     PFQuery *query = [PFQuery queryWithClassName:@"Posts"];
     
-    [query whereKey:@"geopoint" nearGeoPoint:geoPoint withinMiles:20.0];
+    [query whereKey:@"eventLocation" nearGeoPoint:geoPoint withinMiles:20.0];
     
     NSLog(@"Query: %@",query);
     
     // Limit the query
     
-    query.limit = 50;
+    query.limit = 10;
     
     // Store objects in the array
     NSArray *objects = [query findObjects];
@@ -517,7 +493,7 @@
             
             
             MKPointAnnotation *annotation = [[MKPointAnnotation alloc] init];
-            PFGeoPoint *geoPoint= [object objectForKey:@"geopoint"];
+            PFGeoPoint *geoPoint= [object objectForKey:@"eventLocation"];
             annotation.coordinate = CLLocationCoordinate2DMake(geoPoint.latitude,geoPoint.longitude);
             _image = [object objectForKey:@"eventImage"];
             
@@ -541,10 +517,5 @@
     }];
 
         }
-
--(IBAction)cancel:(id)sender {
-    
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
 
 @end

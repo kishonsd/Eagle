@@ -23,16 +23,5 @@
     _loginButton.layer.cornerRadius = 7; // this value vary as per your desire
     _loginButton.clipsToBounds = YES;
 
-
 }
-
-- (IBAction)signUp:(id)sender {
-
-}
-
-- (IBAction)login:(id)sender {
-
-   
-}
-
 @end
