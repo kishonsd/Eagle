@@ -11,11 +11,22 @@
 #import <CoreLocation/CoreLocation.h>
 #import <QuartzCore/QuartzCore.h>
 #import <MapKit/MapKit.h>
+#import "Post.h"
+
 
 @interface EventTableView : PFQueryTableViewController <UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate> {
     
+    NSArray *posts;
+    
 }
 
-@property (nonatomic, strong) UITableView *eventTable;
+@property (nonatomic, strong) IBOutlet UITableView *eventTable;
+@property (nonatomic, strong) UIView *refreshLoadingView;
+@property (nonatomic, strong) UIView *refreshColorView;
+@property (nonatomic, strong) UIImageView *compass_background;
+@property (nonatomic, strong) UIImageView *compass_spinner;
+@property (assign) BOOL isRefreshIconsOverlap;
+@property (assign) BOOL isRefreshAnimating;
+@property (nonatomic, strong) PFObject *object;
 
 @end
