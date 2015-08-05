@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE02AABA1B6F4BDA00EAEF10 /* KVNContrast.m in Sources */ = {isa = PBXBuildFile; fileRef = CE02AAA21B6F4BDA00EAEF10 /* KVNContrast.m */; };
+		CE02AABB1B6F4BDA00EAEF10 /* UIImage+KVNEmpty.m in Sources */ = {isa = PBXBuildFile; fileRef = CE02AAA41B6F4BDA00EAEF10 /* UIImage+KVNEmpty.m */; };
+		CE02AABC1B6F4BDA00EAEF10 /* UIImage+KVNImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = CE02AAA61B6F4BDA00EAEF10 /* UIImage+KVNImageEffects.m */; };
+		CE02AABD1B6F4BDA00EAEF10 /* KVNProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = CE02AAA91B6F4BDA00EAEF10 /* KVNProgress.m */; };
+		CE02AABE1B6F4BDA00EAEF10 /* KVNProgressConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = CE02AAAB1B6F4BDA00EAEF10 /* KVNProgressConfiguration.m */; };
+		CE02AAC51B6F4BDA00EAEF10 /* KVNProgressView.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE02AAB81B6F4BDA00EAEF10 /* KVNProgressView.xib */; };
+		CE02AAC81B6F58E500EAEF10 /* Settings.m in Sources */ = {isa = PBXBuildFile; fileRef = CE02AAC71B6F58E500EAEF10 /* Settings.m */; };
 		CED81E961B6816BC00B84D0A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CED81E951B6816BC00B84D0A /* main.m */; };
 		CED81E991B6816BC00B84D0A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CED81E981B6816BC00B84D0A /* AppDelegate.m */; };
 		CED81E9C1B6816BC00B84D0A /* Bash.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CED81E9A1B6816BC00B84D0A /* Bash.xcdatamodeld */; };
@@ -59,7 +66,7 @@
 		CED81F9B1B6B353800B84D0A /* Location Filled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CED81F971B6B353700B84D0A /* Location Filled@2x.png */; };
 		CED81F9C1B6B353800B84D0A /* Location Filled.png in Resources */ = {isa = PBXBuildFile; fileRef = CED81F981B6B353800B84D0A /* Location Filled.png */; };
 		CED81F9E1B6BE67F00B84D0A /* Speech Bubble Filled-32.png in Resources */ = {isa = PBXBuildFile; fileRef = CED81F9D1B6BE67F00B84D0A /* Speech Bubble Filled-32.png */; };
-		CED81FA11B6BE8FC00B84D0A /* TabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = CED81FA01B6BE8FC00B84D0A /* TabBarController.m */; };
+		CEE145121B71A3C1009B17A8 /* Hideable.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE145111B71A3C1009B17A8 /* Hideable.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +80,19 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CE02AAA11B6F4BDA00EAEF10 /* KVNContrast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVNContrast.h; sourceTree = "<group>"; };
+		CE02AAA21B6F4BDA00EAEF10 /* KVNContrast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVNContrast.m; sourceTree = "<group>"; };
+		CE02AAA31B6F4BDA00EAEF10 /* UIImage+KVNEmpty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+KVNEmpty.h"; sourceTree = "<group>"; };
+		CE02AAA41B6F4BDA00EAEF10 /* UIImage+KVNEmpty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+KVNEmpty.m"; sourceTree = "<group>"; };
+		CE02AAA51B6F4BDA00EAEF10 /* UIImage+KVNImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+KVNImageEffects.h"; sourceTree = "<group>"; };
+		CE02AAA61B6F4BDA00EAEF10 /* UIImage+KVNImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+KVNImageEffects.m"; sourceTree = "<group>"; };
+		CE02AAA81B6F4BDA00EAEF10 /* KVNProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVNProgress.h; sourceTree = "<group>"; };
+		CE02AAA91B6F4BDA00EAEF10 /* KVNProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVNProgress.m; sourceTree = "<group>"; };
+		CE02AAAA1B6F4BDA00EAEF10 /* KVNProgressConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVNProgressConfiguration.h; sourceTree = "<group>"; };
+		CE02AAAB1B6F4BDA00EAEF10 /* KVNProgressConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVNProgressConfiguration.m; sourceTree = "<group>"; };
+		CE02AAB81B6F4BDA00EAEF10 /* KVNProgressView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = KVNProgressView.xib; sourceTree = "<group>"; };
+		CE02AAC61B6F58E500EAEF10 /* Settings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Settings.h; sourceTree = "<group>"; };
+		CE02AAC71B6F58E500EAEF10 /* Settings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Settings.m; sourceTree = "<group>"; };
 		CED81E901B6816BC00B84D0A /* Bash.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bash.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CED81E951B6816BC00B84D0A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CED81E971B6816BC00B84D0A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -151,8 +171,8 @@
 		CED81F971B6B353700B84D0A /* Location Filled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Location Filled@2x.png"; path = "../../../../../../../Downloads/Location Filled@2x.png"; sourceTree = "<group>"; };
 		CED81F981B6B353800B84D0A /* Location Filled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Location Filled.png"; path = "../../../../../../../Downloads/Location Filled.png"; sourceTree = "<group>"; };
 		CED81F9D1B6BE67F00B84D0A /* Speech Bubble Filled-32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Speech Bubble Filled-32.png"; path = "../../../../../../../Downloads/Speech Bubble Filled-32.png"; sourceTree = "<group>"; };
-		CED81F9F1B6BE8FC00B84D0A /* TabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TabBarController.h; sourceTree = "<group>"; };
-		CED81FA01B6BE8FC00B84D0A /* TabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TabBarController.m; sourceTree = "<group>"; };
+		CEE145101B71A3C1009B17A8 /* Hideable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Hideable.h; sourceTree = "<group>"; };
+		CEE145111B71A3C1009B17A8 /* Hideable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Hideable.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,6 +213,41 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CE02AAA01B6F4BDA00EAEF10 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				CE02AAA11B6F4BDA00EAEF10 /* KVNContrast.h */,
+				CE02AAA21B6F4BDA00EAEF10 /* KVNContrast.m */,
+				CE02AAA31B6F4BDA00EAEF10 /* UIImage+KVNEmpty.h */,
+				CE02AAA41B6F4BDA00EAEF10 /* UIImage+KVNEmpty.m */,
+				CE02AAA51B6F4BDA00EAEF10 /* UIImage+KVNImageEffects.h */,
+				CE02AAA61B6F4BDA00EAEF10 /* UIImage+KVNImageEffects.m */,
+			);
+			name = Categories;
+			path = "../../../../../../../Downloads/KVNProgress-master-6/KVNProgress/Categories";
+			sourceTree = "<group>";
+		};
+		CE02AAA71B6F4BDA00EAEF10 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				CE02AAA81B6F4BDA00EAEF10 /* KVNProgress.h */,
+				CE02AAA91B6F4BDA00EAEF10 /* KVNProgress.m */,
+				CE02AAAA1B6F4BDA00EAEF10 /* KVNProgressConfiguration.h */,
+				CE02AAAB1B6F4BDA00EAEF10 /* KVNProgressConfiguration.m */,
+			);
+			name = Classes;
+			path = "../../../../../../../Downloads/KVNProgress-master-6/KVNProgress/Classes";
+			sourceTree = "<group>";
+		};
+		CE02AAB71B6F4BDA00EAEF10 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				CE02AAB81B6F4BDA00EAEF10 /* KVNProgressView.xib */,
+			);
+			name = Resources;
+			path = "../../../../../../../Downloads/KVNProgress-master-6/KVNProgress/Resources";
+			sourceTree = "<group>";
+		};
 		CED81E871B6816BC00B84D0A = {
 			isa = PBXGroup;
 			children = (
@@ -227,6 +282,8 @@
 				CED81EE41B6816D500B84D0A /* EventCell.m */,
 				CED81F1F1B681A1800B84D0A /* EventTableView.h */,
 				CED81F201B681A1800B84D0A /* EventTableView.m */,
+				CEE145101B71A3C1009B17A8 /* Hideable.h */,
+				CEE145111B71A3C1009B17A8 /* Hideable.m */,
 				CED81F221B681A6700B84D0A /* UserProfile.h */,
 				CED81F231B681A6700B84D0A /* UserProfile.m */,
 				CED81EE51B6816D500B84D0A /* EventDetail.h */,
@@ -235,9 +292,9 @@
 				CED81EE81B6816D500B84D0A /* Home.m */,
 				CED81EEB1B6816D500B84D0A /* Login.h */,
 				CED81EEC1B6816D500B84D0A /* Login.m */,
+				CE02AAC61B6F58E500EAEF10 /* Settings.h */,
+				CE02AAC71B6F58E500EAEF10 /* Settings.m */,
 				CED81EEE1B6816D500B84D0A /* main.storyboard */,
-				CED81F9F1B6BE8FC00B84D0A /* TabBarController.h */,
-				CED81FA01B6BE8FC00B84D0A /* TabBarController.m */,
 				CED81F8D1B6AC79300B84D0A /* Chat.h */,
 				CED81F8E1B6AC79300B84D0A /* Chat.m */,
 				CED81EEF1B6816D500B84D0A /* MapPostsView.h */,
@@ -246,6 +303,9 @@
 				CED81F911B6AE85C00B84D0A /* Post.m */,
 				CED81EF11B6816D500B84D0A /* SignUp.h */,
 				CED81EF21B6816D500B84D0A /* SignUp.m */,
+				CE02AAA01B6F4BDA00EAEF10 /* Categories */,
+				CE02AAA71B6F4BDA00EAEF10 /* Classes */,
+				CE02AAB71B6F4BDA00EAEF10 /* Resources */,
 				CED81EE91B6816D500B84D0A /* Images.xcassets */,
 				CED81E9A1B6816BC00B84D0A /* Bash.xcdatamodeld */,
 				CED81E931B6816BC00B84D0A /* Supporting Files */,
@@ -432,6 +492,7 @@
 				CED81F0C1B6816D500B84D0A /* main.storyboard in Resources */,
 				CED81EF31B6816D500B84D0A /* LaunchScreen.xib in Resources */,
 				CED81F091B6816D500B84D0A /* Info.plist in Resources */,
+				CE02AAC51B6F4BDA00EAEF10 /* KVNProgressView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -450,19 +511,25 @@
 			buildActionMask = 2147483647;
 			files = (
 				CED81F5A1B6AB3F100B84D0A /* JRTableViewController.m in Sources */,
+				CE02AABE1B6F4BDA00EAEF10 /* KVNProgressConfiguration.m in Sources */,
+				CEE145121B71A3C1009B17A8 /* Hideable.m in Sources */,
+				CE02AABD1B6F4BDA00EAEF10 /* KVNProgress.m in Sources */,
 				CED81F591B6AB3F100B84D0A /* JRAppDelegate.m in Sources */,
 				CED81E991B6816BC00B84D0A /* AppDelegate.m in Sources */,
 				CED81F0A1B6816D500B84D0A /* Login.m in Sources */,
 				CED81F0D1B6816D500B84D0A /* MapPostsView.m in Sources */,
-				CED81FA11B6BE8FC00B84D0A /* TabBarController.m in Sources */,
+				CE02AABA1B6F4BDA00EAEF10 /* KVNContrast.m in Sources */,
 				CED81E9C1B6816BC00B84D0A /* Bash.xcdatamodeld in Sources */,
 				CED81F241B681A6700B84D0A /* UserProfile.m in Sources */,
 				CED81F8F1B6AC79300B84D0A /* Chat.m in Sources */,
+				CE02AAC81B6F58E500EAEF10 /* Settings.m in Sources */,
 				CED81E9F1B6816BC00B84D0A /* ViewController.m in Sources */,
 				CED81F071B6816D500B84D0A /* Home.m in Sources */,
+				CE02AABC1B6F4BDA00EAEF10 /* UIImage+KVNImageEffects.m in Sources */,
 				CED81F921B6AE85C00B84D0A /* Post.m in Sources */,
 				CED81E961B6816BC00B84D0A /* main.m in Sources */,
 				CED81F211B681A1800B84D0A /* EventTableView.m in Sources */,
+				CE02AABB1B6F4BDA00EAEF10 /* UIImage+KVNEmpty.m in Sources */,
 				CED81F061B6816D500B84D0A /* EventDetail.m in Sources */,
 				CED81F0E1B6816D500B84D0A /* SignUp.m in Sources */,
 				CED81F5B1B6AB3F100B84D0A /* JRViewController.m in Sources */,
@@ -688,6 +755,7 @@
 				CED81EB81B6816BC00B84D0A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		CED81EB91B6816BC00B84D0A /* Build configuration list for PBXNativeTarget "BashTests" */ = {
 			isa = XCConfigurationList;
@@ -696,6 +764,7 @@
 				CED81EBB1B6816BC00B84D0A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

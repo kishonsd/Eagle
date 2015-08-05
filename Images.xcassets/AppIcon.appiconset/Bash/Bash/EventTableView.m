@@ -27,10 +27,9 @@
         self.parseClassName = @"Posts";
         
         // The key of the PFObject to display in the label of the default cell style
-        self.textKey = @"eventName";
+        self.textKey = @"title";
         self.textKey = @"address";
         self.textKey = @"date";
-        self.imageKey = @"eventImage";
         
         // The title for this table in the Navigation Controller.
         self.title = @"Bash";
@@ -44,6 +43,7 @@
         // The number of objects to show per page
         self.objectsPerPage = 100;
     }
+    
     return self;
 }
 
@@ -53,10 +53,13 @@
 {
     [super viewDidLoad];
     
+    _navBar.topItem.title = @"Bash";
+    
+    [self.navigationController.navigationBar setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys: [UIFont fontWithName:@"Avenir - Medium" size:21], NSFontAttributeName, nil]];
+    
     
     // Set up the refresh control
     [self setupRefreshControl];
-    
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -64,19 +67,13 @@
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
     [self.navigationController setNavigationBarHidden:hidden
-                                             animated:YES];
+                                             animated:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -99,6 +96,23 @@
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+// Override to customize what kind of query to perform on the class. The default is to query for
+// all objects ordered by createdAt descending.
+- (PFQuery *)queryForTable {
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"Posts"];
+    
+    // If no objects are loaded in memory, we look to the cache first to fill the table
+    // and then subsequently do a query against the network.
+    if ([self.objects count] == 0) {
+        query.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    }
+    
+    [query orderByAscending:@"createdAt"];
+    
+    return query;
 }
 
 #pragma mark - Table view data source
@@ -137,23 +151,6 @@
     // This method is called before a PFQuery is fired to get more objects
 }
 
-
-// Override to customize what kind of query to perform on the class. The default is to query for
-// all objects ordered by createdAt descending.
-- (PFQuery *)queryForTable {
-    
-    PFQuery *query = [PFQuery queryWithClassName:self.parseClassName];
-    
-    // If no objects are loaded in memory, we look to the cache first to fill the table
-    // and then subsequently do a query against the network.
-    if ([self.objects count] == 0) {
-        query.cachePolicy = kPFCachePolicyCacheThenNetwork;
-    }
-    
-    [query orderByAscending:@"createdAt"];
-    
-    return query;
-}
 
 #pragma mark - The Magic!
 
@@ -204,6 +201,7 @@
             [self expand];
     }
     else {
+        
         if(scrollView.isTracking && (fabs(differenceFromLast)>1))
             [self contract];
     }
@@ -366,6 +364,23 @@
                      }];
 }
 
+
+- (void)refresh:(id)sender{
+    
+    // -- DO SOMETHING AWESOME (... or just wait 3 seconds) --
+    // This is where you'll make requests to an API, reload data, or process information
+    double delayInSeconds = 3.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        NSLog(@"DONE");
+        
+        // When done requesting/reloading/processing invoke endRefreshing, to close the control
+        [self.refreshControl endRefreshing];
+    });
+    // -- FINISHED SOMETHING AWESOME, WOO! --
+}
+
+
 - (void)resetAnimation
 {
     // Reset our flags and background color
@@ -386,13 +401,13 @@
     }
     
     UILabel *eventName = (UILabel*) [cell viewWithTag:1];
-    eventName.text = [object objectForKey:@"eventName"];
+    eventName.text = [object objectForKey:@"title"];
     
     UILabel *address = (UILabel*) [cell viewWithTag:2];
     address.text = [object objectForKey:@"address"];
     
     UILabel *date = (UILabel*) [cell viewWithTag:3];
-    date.text = [object objectForKey:@"descriptionTitle"];
+    date.text = [object objectForKey:@"date"];
     
 
     //loading icons

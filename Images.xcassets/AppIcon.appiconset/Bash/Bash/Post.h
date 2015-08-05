@@ -15,5 +15,6 @@
 @property (nonatomic, strong) UILabel *eventName;
 @property (nonatomic, strong) UILabel *address;
 @property (nonatomic, strong) UILabel *date;
+@property (nonatomic, strong) PFImageView *eventImage;
 
 @end

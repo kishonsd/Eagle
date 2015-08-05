@@ -12,6 +12,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <MapKit/MapKit.h>
 #import "Post.h"
+#import "Hideable.h"
 
 
 @interface EventTableView : PFQueryTableViewController <UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate> {
@@ -28,5 +29,7 @@
 @property (assign) BOOL isRefreshIconsOverlap;
 @property (assign) BOOL isRefreshAnimating;
 @property (nonatomic, strong) PFObject *object;
+@property (nonatomic, strong) PFImageView *eventImage;
+@property (nonatomic, strong) IBOutlet UINavigationBar *navBar;
 
 @end

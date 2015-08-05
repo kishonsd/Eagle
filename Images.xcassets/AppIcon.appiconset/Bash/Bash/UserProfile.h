@@ -7,7 +7,13 @@
 //
 
 #import <ParseUI/ParseUI.h>
+#import <Parse/Parse.h>
 
-@interface UserProfile : PFQueryTableViewController
+@interface UserProfile : PFQueryTableViewController <UITableViewDataSource, UITableViewDataSource> {
+    
+    NSArray *posts;
+}
+
+@property (nonatomic, strong) IBOutlet UINavigationBar *navBar;
 
 @end
