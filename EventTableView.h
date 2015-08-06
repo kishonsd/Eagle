@@ -14,6 +14,7 @@
 #import <MapKit/MapKit.h>
 #import "Post.h"
 #import "Hideable.h"
+#import "EventDetail.h"
 
 
 @interface EventTableView : PFQueryTableViewController <UITableViewDataSource, UITableViewDelegate, CLLocationManagerDelegate> {
