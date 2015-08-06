@@ -436,10 +436,10 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    // Check that a new transition has been requested to the DetailViewController and prepares for it
+    // Check that a new transition has been requested to the detail view and prepares for it
     if ([segue.identifier isEqualToString:@"showEvent"]){
 
-        // Capture the object (e.g. exam) the user has selected from the list
+        // Capture the object (event) the user has selected from the list
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         PFObject *object = [self.objects objectAtIndex:indexPath.row];
 
