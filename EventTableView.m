@@ -75,6 +75,26 @@
     
     [self.navigationController setNavigationBarHidden:hidden
                                              animated:NO];
+    self->posts = [NSArray array];
+    [self performSelector: @selector(retreiveFromParse)];
+    
+    [_eventTable reloadData];
+
+
+}
+
+- (void)retreiveFromParse {
+    
+    PFQuery *retrievePosts = [PFQuery queryWithClassName:@"Posts"];
+    
+    [retrievePosts findObjectsInBackgroundWithBlock:^(NSArray *objects,     NSError *error) {
+        
+        if (!error) {
+            posts = [[NSArray alloc] initWithArray:objects];
+            NSLog(@"successful");
+            
+        }
+    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -97,23 +117,6 @@
 {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
-// Override to customize what kind of query to perform on the class. The default is to query for
-// all objects ordered by createdAt descending.
-- (PFQuery *)queryForTable {
-    
-    PFQuery *query = [PFQuery queryWithClassName:@"Posts"];
-    
-    // If no objects are loaded in memory, we look to the cache first to fill the table
-    // and then subsequently do a query against the network.
-    if ([self.objects count] == 0) {
-        query.cachePolicy = kPFCachePolicyCacheThenNetwork;
-    }
-    
-    [query orderByAscending:@"createdAt"];
-    
-    return query;
 }
 
 #pragma mark - Table view data source
