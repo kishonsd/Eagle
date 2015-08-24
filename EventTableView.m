@@ -67,6 +67,9 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    [self loadObjects];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -86,7 +89,8 @@
 - (void)retreiveFromParse {
     
     PFQuery *retrievePosts = [PFQuery queryWithClassName:@"Posts"];
-    
+    [retrievePosts whereKey:@"geopoint" equalTo:
+     
     [retrievePosts findObjectsInBackgroundWithBlock:^(NSArray *objects,     NSError *error) {
         
         if (!error) {
