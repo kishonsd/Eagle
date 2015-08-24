@@ -127,7 +127,9 @@
 // all objects ordered by createdAt descending.
 -(void)retrieveFromParse {
   
-  PFQuery *query =
+  PFQuery *query = [PFQuery queryWithClassName:@"Chat"];
+  PFUser *user = [PFUser currentUser];
+  [query whereKey:@"user" equalTo:self.user];
 }
 
 
