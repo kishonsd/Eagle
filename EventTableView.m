@@ -89,7 +89,8 @@
 - (void)retreiveFromParse {
     
     PFQuery *retrievePosts = [PFQuery queryWithClassName:@"Posts"];
-    [retrievePosts whereKey:@"geopoint" equalTo:
+    [retrievePosts whereKey:@"geopoint" equalTo:@""];
+   [retrievePosts includeKey:@"geopoint"];
      
     [retrievePosts findObjectsInBackgroundWithBlock:^(NSArray *objects,     NSError *error) {
         
